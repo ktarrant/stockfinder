@@ -19,5 +19,5 @@ import report.views
 
 urlpatterns = [
     url(r'^$', report.views.new, name='report_new'),
-    url(r'^report/(?P<pk>\d+)/$', report.views.detail, name='report_detail'),
+    url(r'^report/(?P<pk>\d+)/$', report.views.edit, name='report_detail'),
 ]

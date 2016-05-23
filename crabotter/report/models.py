@@ -1,11 +1,13 @@
 from django.db import models
 from django.forms import ModelForm
-import datetime
+from datetime import datetime
 
 # Create your models here.
 
 class Stock(models.Model):
-    ticker = models.CharField(max_length=32)
+    ticker = models.CharField(max_length=32, primary_key=True)
+    def __str__(self):
+        return self.ticker
 
 class Report(models.Model):
     report_name = models.CharField(max_length=200)
@@ -13,8 +15,10 @@ class Report(models.Model):
     plotly_url = models.URLField(max_length=200)
     notes = models.TextField()
     stocks = models.ManyToManyField(Stock, blank=True)
-    start_date = models.DateTimeField('start date', default=datetime.date.today, blank=True)
-    end_date = models.DateTimeField('end date', default=datetime.date.today, blank=True)
+    start_date = models.DateTimeField('start date', default=datetime.now, blank=True)
+    end_date = models.DateTimeField('end date', default=datetime.now, blank=True)
+    def __str__(self):
+        return "Report: {}".format(self.report_name)
 
 class StockForm(ModelForm):
     class Meta:
