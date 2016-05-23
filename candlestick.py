@@ -5,6 +5,8 @@ import pandas as pd
 class Candlestick(dict):
     """ Class for managing a candlestick stock figure. """
 
+    VOLUME_ENABLED = False
+
     def __init__(self, df, primaryKey="Close"):
         super(Candlestick, self).__init__(
             FF.create_candlestick(df.Open, df.High, df.Low, df.Close, dates=df.index))
@@ -17,12 +19,15 @@ class Candlestick(dict):
         self._addMovingAverage(df[primaryKey], 200)
         self._addMovingAverage(df[primaryKey], 50)
 
-        self._addVolumeBars(df["Volume"])
+        if Candlestick.VOLUME_ENABLED:
+            self._addVolumeBars(df["Volume"])
 
-        self["layout"] = {
-            "yaxis1": {"domain": [0.2, 1]},
-            "yaxis2": {"domain": [0, 0.2], "anchor": "x1"},
-        }
+            self["layout"] = {
+                "paper_bgcolor": 'rgba(0,0,0,0)',
+                "plot_bgcolor": 'rgba(0,0,0,0)',
+                "yaxis1": {"domain": [0, 1]},
+                "yaxis2": {"domain": [0, 0.2], "anchor": "x1"},
+            }
 
     def _addMarkers(self, name, series):
         markerTexts = [ "{0:.2f} ({1:+.2%})".format(value, perChange)
@@ -65,9 +70,12 @@ class Candlestick(dict):
             "y": series.values,
             "name": "Volume",
             "type": "bar",
+            "opacity": 0.2,
             "showlegend": False,
+            "showgrid": False,
+            "showticklabels": False,
             "hoverinfo": "name+y",
             "xaxis": "x1",
             "yaxis": "y2",
         }
-        self["data"] += [ sp ]
+        self["data"] = [ sp ] + self["data"]

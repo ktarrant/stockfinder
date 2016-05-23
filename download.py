@@ -5,7 +5,7 @@ import pandas_datareader.data as web
 
 endtime = datetime.date.today()
 starttime = datetime.date.fromordinal(endtime.toordinal() - 365)
-df = web.DataReader("aapl", 'yahoo', starttime, endtime)
+df = web.DataReader("scty", 'yahoo', starttime, endtime)
 fig = candlestick.Candlestick(df)
 
 # print(fig)
