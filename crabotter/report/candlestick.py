@@ -1,6 +1,6 @@
 from plotly.tools import FigureFactory as FF
-import report.indicators as indicators
-import pandas as pd 
+import report.indicators
+import pandas as pd
 
 class Candlestick(dict):
     """ Class for managing a candlestick stock figure. """
