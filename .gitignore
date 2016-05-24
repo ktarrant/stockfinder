@@ -1,6 +1,5 @@
 __pycache__
 **/*.pyc
-**/*.html
 **/settings.py
 **/settings/*.py
 **/*.db
