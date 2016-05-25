@@ -1,0 +1,21 @@
+{% extends "crabtheme/base.html" %}
+
+{% load plotly_tags %}
+
+{% block content %}
+<!-- Main -->
+<section id="main" class="container">
+    <h2>{{ stock.ticker|upper }}</h2>
+    <p>Description of company goes here.</p>
+</section>
+
+<!-- Plots -->
+{% for plot in plots %}
+<section class="box">
+    {% plotly_embed plot.plotly_url %}
+    <h3>{{ plot.title }}</h3>
+    <p>{{ plot.description }}</p>
+</section>
+{% endfor %}
+
+{% endblock %}

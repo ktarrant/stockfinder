@@ -18,5 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'', include('crabtheme.urls')),
+    url(r'^stock/', include('stock.urls')),
     url(r'^admin/', admin.site.urls),
 ]

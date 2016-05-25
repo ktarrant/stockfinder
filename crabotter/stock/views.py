@@ -1,24 +1,28 @@
-from django.shortcuts import render
-from report.models import Stock, StockPlot
+from django.shortcuts import render, Http404
+from stock.models import Stock, StockPlot
 from datetime import datetime
-import report.candlestick as candlestick
+import stock.candlestick as candlestick
+import pandas_datareader
 import pandas_datareader.data as web
 import plotly.tools as tls
 from plotly.plotly import plot
 
 # Create your views here.
+def home(request):
+    return detail(request, 'aapl')
 
-def stock(request, ticker):
+def detail(request, ticker):
     tickerClean = ticker.lower()
     try:
         stock = Stock.objects.get(ticker=tickerClean)
     except Stock.DoesNotExist:
         # Create the stock plot
-        endtime = datetime.today()
-        starttime = datetime.fromordinal(endtime.toordinal() - 365)
+        plotRange = 200
+        endtime = datetime.now()
+        starttime = datetime.fromordinal(endtime.toordinal() - plotRange)
         try:
             df = web.DataReader(tickerClean, 'yahoo', starttime, endtime)
-        except RemoteDataError:
+        except pandas_datareader._utils.RemoteDataError:
             raise Http404("Ticker symbol not found: {}".format(ticker))
         stock = Stock.objects.create(ticker=tickerClean)
         fig = candlestick.Candlestick(df)
@@ -26,11 +30,12 @@ def stock(request, ticker):
         url = plot(fig, filename=plotly_filename, auto_open=False)
         stockPlot = stock.default_plot.create(
             plot_stock=stock,
-            start_date=datetime.fromordinal(endtime.toordinal() - 365),
-            end_date=datetime.now(),
+            title="Movement of {} over last {} days".format(ticker.upper(), plotRange),
+            start_date=starttime,
+            end_date=endtime,
             pub_date=datetime.now(),
             edit_date=datetime.now(),
             plotly_url=url,
             plotly_filename=plotly_filename)
 
-    return render(request, 'report/stock.html', {"stock": stock, 'plots': stock.default_plot.all()})
+    return render(request, 'stock/detail.html', {"stock": stock, 'plots': stock.default_plot.all()})

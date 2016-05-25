@@ -1,28 +1,30 @@
 from plotly.tools import FigureFactory as FF
-import report.indicators as indicators
+import stock.indicators as indicators
 import pandas as pd 
 
 class Candlestick(dict):
     """ Class for managing a candlestick stock figure. """
-
+    CUSTOM_MARKERS_ENABLED = False
     VOLUME_ENABLED = False
 
     def __init__(self, df, primaryKey="Close"):
         super(Candlestick, self).__init__(
             FF.create_candlestick(df.Open, df.High, df.Low, df.Close, dates=df.index))
         self.df = df
-        for subplot in self["data"]:
-            subplot["hoverinfo"] = "none"
 
-        self._addMarkers(primaryKey, df[primaryKey])
+        if Candlestick.CUSTOM_MARKERS_ENABLED:
+            for subplot in self["data"]:
+                subplot["hoverinfo"] = "none"
 
-        self._addMovingAverage(df[primaryKey], 200)
+            self._addMarkers(primaryKey, df[primaryKey])
+
         self._addMovingAverage(df[primaryKey], 50)
+        self._addMovingAverage(df[primaryKey], 14)
 
         if Candlestick.VOLUME_ENABLED:
             self._addVolumeBars(df["Volume"])
 
-            self["layout"] = {
+            self["layout"].update = {
                 "paper_bgcolor": 'rgba(0,0,0,0)',
                 "plot_bgcolor": 'rgba(0,0,0,0)',
                 "yaxis1": {"domain": [0, 1]},
