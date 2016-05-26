@@ -9,7 +9,7 @@ from plotly.plotly import plot
 
 # Create your views here.
 def home(request):
-    return detail(request, 'aapl')
+    return detail(request, '$dja')
 
 def detail(request, ticker):
     tickerClean = ticker.lower()
