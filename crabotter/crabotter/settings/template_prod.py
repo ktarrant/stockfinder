@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 from crabotter.settings.base import *
 import os
+import logging
+
+log = logging.getLogger(__name__)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -24,15 +27,24 @@ DEBUG = True
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-# http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-rds.html
-if 'RDS_HOSTNAME' in os.environ:
+# http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-rd$
+if "RDS_HOSTNAME" in os.environ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
+            'NAME': os.environ["RDS_TABLE_NAME"],
+            'USER': os.environ["RDS_USERNAME"],
+            'PASSWORD': os.environ["RDS_PASSWORD"],
+            'HOST': os.environ["RDS_HOSTNAME"],
+            'PORT': os.environ["RDS_PORT"],
         }
     }
+else:
+    log.warn("RDS_HOSTNAME not found in environment. Using sqlite as backup.")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+
