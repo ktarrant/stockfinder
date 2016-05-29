@@ -1,7 +1,5 @@
 __pycache__
 **/*.pyc
-**/settings/dev*.py
-**/settings/prod*.py
 **/*.db
 **/*.sqlite3
 # Elastic Beanstalk Files
