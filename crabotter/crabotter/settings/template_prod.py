@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 from crabotter.settings.base import *
 import os
 import logging
+import plotly.plotly as py
 
 log = logging.getLogger(__name__)
 
@@ -48,3 +49,4 @@ else:
         }
     }
 
+py.sign_in(os.environ["PLOTLY_USERNAME"], os.environ["PLOTLY_API_KEY"])
