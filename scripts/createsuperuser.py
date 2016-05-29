@@ -3,7 +3,7 @@ import os
 import logging
 import django.db.utils
 
-log = logging.getLogger(__info__)
+log = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "crabotter.settings.prod")
